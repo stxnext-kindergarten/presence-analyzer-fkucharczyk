@@ -1,4 +1,3 @@
 # -*- coding: utf-8 -*-
-"""
-Helper functions used in templates.
+"""Helper functions used in templates.
 """
