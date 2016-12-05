@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Flask app initialization.
+"""Flask app initialization.
 """
 import os.path
 from flask import Flask
