@@ -8,7 +8,7 @@ from datetime import datetime
 
 from flask import Response
 
-from main import app
+from from presence_analyzer.main import app
 
 import logging
 log = logging.getLogger(__name__)  # pylint: disable=invalid-name
