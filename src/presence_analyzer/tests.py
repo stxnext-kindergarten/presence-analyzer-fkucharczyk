@@ -4,10 +4,9 @@ import os.path
 import json
 import datetime
 import unittest
+import httplib
 
-import main
-import views
-import utils
+from presence_analyzer import main, views, utils
 
 
 TEST_DATA_CSV = os.path.join(
@@ -30,26 +29,21 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
     def test_mainpage(self):
         """Test main page redirect."""
         resp = self.client.get('/')
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, httplib.FOUND)
         assert resp.headers['Location'].endswith('/presence_weekday.html')
 
     def test_api_users(self):
         """Test users listing."""
         resp = self.client.get('/api/v1/users')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
+
+        self.assertEqual(resp.status_code, httplib.OK)
+        self.assertEqual(resp.content_type, 'application/json')
         self.assertEqual(len(data), 2)
         self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
 
     def test_mean_time_weekday_view(self):
         """Test mean presence time of given user grouped by weekday."""
-        resp_user_not_found = self.client.get('/api/v1/mean_time_weekday/0')
-        self.assertEqual(resp_user_not_found.status_code, 404)
-        resp = self.client.get('/api/v1/mean_time_weekday/10')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content_type, 'application/json')
-        data = json.loads(resp.data)
         proper_data = [
             ['Mon', 0],
             ['Tue', 30047.0],
@@ -59,16 +53,18 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             ['Sat', 0],
             ['Sun', 0],
         ]
-        self.assertEqual(data, proper_data)
+
+        resp = self.client.get('/api/v1/mean_time_weekday/10')
+        data = json.loads(resp.data)
+        resp_user_not_found = self.client.get('/api/v1/mean_time_weekday/0')
+
+        self.assertEqual(resp_user_not_found.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
+        self.assertEqual(resp.content_type, 'application/json')
+        self.assertListEqual(data, proper_data)
 
     def test_presence_weekday_view(self):
         """Test total presence time of given user grouped by weekday."""
-        resp_404 = self.client.get('/api/v1/presence_weekday/0')
-        self.assertEqual(resp_404.status_code, 404)
-        resp = self.client.get('/api/v1/presence_weekday/10')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content_type, 'application/json')
-        data = json.loads(resp.data)
         proper_data = [
             ['Weekday', 'Presence (s)'],
             ['Mon', 0],
@@ -79,6 +75,14 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             ['Sat', 0],
             ['Sun', 0],
         ]
+
+        resp_404 = self.client.get('/api/v1/presence_weekday/0')
+        resp = self.client.get('/api/v1/presence_weekday/10')
+        data = json.loads(resp.data)
+
+        self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
+        self.assertEqual(resp.content_type, 'application/json')
         self.assertEqual(data, proper_data)
 
 
@@ -96,9 +100,10 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     def test_get_data(self):
         """Test parsing of CSV file."""
         data = utils.get_data()
+        sample_date = datetime.date(2013, 9, 10)
+
         self.assertIsInstance(data, dict)
         self.assertItemsEqual(data.keys(), [10, 11])
-        sample_date = datetime.date(2013, 9, 10)
         self.assertIn(sample_date, data[10])
         self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
         self.assertEqual(
@@ -151,6 +156,9 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         )
         self.assertEqual(
             0, utils.mean([0, 0, 0])
+        )
+        self.assertEqual(
+            1.25, utils.mean([0, 1, 2, 2])
         )
 
 def suite():
