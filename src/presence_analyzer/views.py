@@ -4,7 +4,7 @@
 import calendar
 from flask import redirect, abort
 
-from main import app
+from presence_analyzer.main import app
 from utils import jsonify, get_data, mean, group_by_weekday
 
 import logging
