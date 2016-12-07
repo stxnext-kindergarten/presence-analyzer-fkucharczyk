@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+py# -*- coding: utf-8 -*-
 """Presence analyzer unit tests."""
 import os.path
 import json
@@ -85,6 +85,12 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         self.assertEqual(data, proper_data)
 
+    def test_presence_start_end_time(self):
+        """Test start and end time of given user grouped by weekday."""
+        data = json.loads(resp.data)
+
+        self.assertListEqual(data, proper_data)
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """Utility functions tests."""
@@ -163,6 +169,10 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertAlmostEqual(
             0.1, utils.mean([0, 0.1, 0.2])
         )
+
+    def test_group_by_start_end_time(self):
+        """Test groups start and end time entries by weekday."""
+
 
 def suite():
     """Default test suite."""
