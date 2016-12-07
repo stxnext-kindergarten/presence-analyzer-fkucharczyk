@@ -48,7 +48,6 @@ def mean_time_weekday_view(user_id):
         (calendar.day_abbr[weekday], mean(intervals))
         for weekday, intervals in enumerate(weekdays)
     ]
-
     return result
 
 
@@ -85,7 +84,4 @@ def presence_start_end_time(user_id):
         (calendar.day_abbr[weekday], start, end)
         for weekday, (start, end) in enumerate(weekdays)
     ]
-
     return result
-
-
