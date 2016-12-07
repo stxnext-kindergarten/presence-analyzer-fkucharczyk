@@ -78,13 +78,8 @@
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"], 'language': 'pl'});
     </script>
+    <script src="/static/js/parseinterval.js"></script>
     <script type="text/javascript">
-        function parseInterval(value) {
-            var result = new Date(1,1,1);
-            result.setMilliseconds(value*1000);
-            return result;
-        }
-
         (function($) {
             $(document).ready(function(){
                 var loading = $('#loading');
@@ -102,6 +97,7 @@
                     if(selected_user) {
                         loading.show();
                         chart_div.hide();
+
                         $.getJSON("/api/v1/mean_time_weekday/"+selected_user, function(result) {
                             $.each(result, function(index, value) {
                                 value[1] = parseInterval(value[1]);
@@ -138,6 +134,7 @@
             <ul>
                 <li><a href="/static/presence_weekday.html">Presence by weekday</a></li>
                 <li id="selected"><a href="/static/mean_time_weekday.html">Presence mean time</a></li>
+                 <li><a href="/static/presence_start_end.html">Presence start-end</a></li>
             </ul>
         </div>
         <div id="content">
