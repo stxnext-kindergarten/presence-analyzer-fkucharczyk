@@ -16,8 +16,9 @@ log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def jsonify(function):
-    """Creates a response with the JSON representation of wrapped function result."""
-
+    """Creates a response with the JSON representation
+    of wrapped function result.
+    """
     @wraps(function)
     def inner(*args, **kwargs):
         """This docstring will be overridden by @wraps decorator."""
@@ -25,7 +26,6 @@ def jsonify(function):
             dumps(function(*args, **kwargs)),
             mimetype='application/json'
         )
-
     return inner
 
 
@@ -102,5 +102,4 @@ def group_by_start_end_time(items):
             seconds_since_midnight(items[date]['end']))
     for weekday, values in enumerate(time):
         result[weekday] = [mean(values['start']), mean(values['end'])]
-
     return result
