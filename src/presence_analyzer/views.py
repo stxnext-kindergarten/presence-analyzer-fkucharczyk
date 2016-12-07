@@ -80,8 +80,7 @@ def presence_start_end_time(user_id):
         abort(404)
 
     weekdays = group_by_start_end_time(data[user_id])
-    result = [
+    return [
         (calendar.day_abbr[weekday], start, end)
         for weekday, (start, end) in enumerate(weekdays)
     ]
-    return result

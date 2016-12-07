@@ -96,9 +96,11 @@ def group_by_start_end_time(items):
     time = [{'start': [], 'end': []} for i in range(7)]
     for date in items:
         time[date.weekday()]['start'].append(
-            seconds_since_midnight(items[date]['start']))
+            seconds_since_midnight(items[date]['start'])
+        )
         time[date.weekday()]['end'].append(
-            seconds_since_midnight(items[date]['end']))
+            seconds_since_midnight(items[date]['end'])
+        )
     for weekday, values in enumerate(time):
         result[weekday] = [mean(values['start']), mean(values['end'])]
     return result
