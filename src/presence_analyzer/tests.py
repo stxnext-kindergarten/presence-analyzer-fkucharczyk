@@ -193,6 +193,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             [0, 0],
             [0, 0]
         ]
+
         data = utils.get_data()
 
         self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
