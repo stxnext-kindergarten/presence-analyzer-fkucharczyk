@@ -132,7 +132,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     def test_group_by_weekday(self):
         """Test groups presence entries by weekday."""
         data = utils.get_data()
-        proper_data =[[], [30047], [24465], [23705], [], [], []]
+        proper_data = [[], [30047], [24465], [23705], [], [], []]
         self.assertEqual(utils.group_by_weekday(data[10]), proper_data)
 
     def test_interval(self):
@@ -159,6 +159,9 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         )
         self.assertEqual(
             1.25, utils.mean([0, 1, 2, 2])
+        )
+        self.assertAlmostEqual(
+            0.1, utils.mean([0, 0.1, 0.2])
         )
 
 def suite():
