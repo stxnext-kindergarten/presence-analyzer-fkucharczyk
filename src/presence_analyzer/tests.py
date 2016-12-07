@@ -1,4 +1,4 @@
-py# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Presence analyzer unit tests."""
 import os.path
 import json
@@ -87,6 +87,18 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
 
     def test_presence_start_end_time(self):
         """Test start and end time of given user grouped by weekday."""
+        proper_data = [
+            ['Mon', 0, 0],
+            ['Tue', 34745, 64792],
+            ['Wed', 33592, 58057],
+            ['Thu', 38926, 62631],
+            ['Fri', 0, 0],
+            ['Sat', 0, 0],
+            ['Sun', 0, 0]
+        ]
+
+        resp_404 = self.client.get('/api/v1/presence_start_end/0')
+        resp = self.client.get('/api/v1/presence_start_end/10')
         data = json.loads(resp.data)
 
         self.assertListEqual(data, proper_data)
@@ -172,7 +184,18 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
 
     def test_group_by_start_end_time(self):
         """Test groups start and end time entries by weekday."""
+        proper_data = [
+            [0,0],
+            [34745, 64792],
+            [33592, 58057],
+            [38926, 62631],
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ]
+        data = utils.get_data()
 
+        self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
 
 def suite():
     """Default test suite."""
