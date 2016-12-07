@@ -4,10 +4,21 @@ Defines views.
 """
 
 import calendar
+<<<<<<< HEAD
 from flask import redirect
+=======
+from flask import redirect, abort, render_template
+from jinja2 import TemplateNotFound
+>>>>>>> 89d1aec... Changed static html to jinja2
 
 from presence_analyzer.main import app
-from presence_analyzer.utils import jsonify, get_data, mean, group_by_weekday
+from presence_analyzer.utils import (
+    jsonify,
+    get_data,
+    mean,
+    group_by_weekday,
+    group_by_start_end_time,
+)
 
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
@@ -15,10 +26,15 @@ log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
 @app.route('/')
 def mainpage():
+<<<<<<< HEAD
     """
     Redirects to front page.
     """
     return redirect('/static/presence_weekday.html')
+=======
+    """Redirects to front page."""
+    return redirect('/presence_weekday.html')
+>>>>>>> 89d1aec... Changed static html to jinja2
 
 
 @app.route('/api/v1/users', methods=['GET'])
@@ -44,9 +60,19 @@ def mean_time_weekday_view(user_id):
         return []
 
     weekdays = group_by_weekday(data[user_id])
+<<<<<<< HEAD
     result = [(calendar.day_abbr[weekday], mean(intervals))
               for weekday, intervals in weekdays.items()]
 
+=======
+    result = [
+        (calendar.day_abbr[weekday], mean(intervals))
+        for weekday, intervals in enumerate(weekdays)
+    ]
+<<<<<<< HEAD
+>>>>>>> 9c833e3... Fixing misspellings
+=======
+>>>>>>> 3a4b58c... Wd 56 adding new timeline - fixed (#5)
     return result
 
 
@@ -67,3 +93,30 @@ def presence_weekday_view(user_id):
 
     result.insert(0, ('Weekday', 'Presence (s)'))
     return result
+
+
+@app.route('/api/v1/presence_start_end/<int:user_id>', methods=['GET'])
+@jsonify
+def presence_start_end_time(user_id):
+    """Returns start and end time of given user grouped by weekday."""
+    data = get_data()
+    if user_id not in data:
+        log.debug('User %s not found!', user_id)
+        abort(404)
+
+    weekdays = group_by_start_end_time(data[user_id])
+    return [
+        (calendar.day_abbr[weekday], start, end)
+        for weekday, (start, end) in enumerate(weekdays)
+    ]
+
+
+@app.route('/<string:template_name>')
+def render_view(template_name):
+    """Render template based on html file"""
+    if not template_name.endswith(".html"):
+        template_name += ".html"
+    try:
+        return render_template(template_name)
+    except TemplateNotFound:
+            abort(404)

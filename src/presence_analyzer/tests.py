@@ -1,7 +1,20 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 """
 Presence analyzer unit tests.
 """
+=======
+py# -*- coding: utf-8 -*-
+=======
+# -*- coding: utf-8 -*-
+>>>>>>> 676724a... WD-56-Adding-new-timeline2
+=======
+# -*- coding: utf-8 -*-
+>>>>>>> d201cca... WD-56 Adding new timeline and deleting pycharm files
+"""Presence analyzer unit tests."""
+>>>>>>> b9b9686... WD-56-Adding-new-timeline
 import os.path
 import json
 import datetime
@@ -39,7 +52,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         Test main page redirect.
         """
         resp = self.client.get('/')
+<<<<<<< HEAD
         self.assertEqual(resp.status_code, 302)
+=======
+        self.assertEqual(resp.status_code, httplib.OK)
+>>>>>>> 89d1aec... Changed static html to jinja2
         assert resp.headers['Location'].endswith('/presence_weekday.html')
 
     def test_api_users(self):
@@ -53,6 +70,91 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(len(data), 2)
         self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
 
+<<<<<<< HEAD
+=======
+    def test_mean_time_weekday_view(self):
+        """Test mean presence time of given user grouped by weekday."""
+        proper_data = [
+            ['Mon', 0],
+            ['Tue', 30047.0],
+            ['Wed', 24465.0],
+            ['Thu', 23705.0],
+            ['Fri', 0],
+            ['Sat', 0],
+            ['Sun', 0],
+        ]
+
+        resp = self.client.get('/api/v1/mean_time_weekday/10')
+        data = json.loads(resp.data)
+        resp_user_not_found = self.client.get(
+            '/api/v1/mean_time_weekday/definitely_not_existing_error_404'
+        )
+
+        self.assertEqual(resp_user_not_found.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
+        self.assertEqual(resp.content_type, 'application/json')
+        self.assertListEqual(data, proper_data)
+
+    def test_presence_weekday_view(self):
+        """Test total presence time of given user grouped by weekday."""
+        proper_data = [
+            ['Weekday', 'Presence (s)'],
+            ['Mon', 0],
+            ['Tue', 30047],
+            ['Wed', 24465],
+            ['Thu', 23705],
+            ['Fri', 0],
+            ['Sat', 0],
+            ['Sun', 0],
+        ]
+
+        resp_404 = self.client.get(
+            '/api/v1/presence_weekday/definitely_not_existing_error_404'
+        )
+        resp = self.client.get('/api/v1/presence_weekday/10')
+        data = json.loads(resp.data)
+
+        self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
+        self.assertEqual(resp.content_type, 'application/json')
+        self.assertEqual(data, proper_data)
+
+    def test_presence_start_end_time(self):
+        """Test start and end time of given user grouped by weekday."""
+        proper_data = [
+            ['Mon', 0, 0],
+            ['Tue', 34745, 64792],
+            ['Wed', 33592, 58057],
+            ['Thu', 38926, 62631],
+            ['Fri', 0, 0],
+            ['Sat', 0, 0],
+            ['Sun', 0, 0]
+        ]
+
+        resp_404 = self.client.get(
+            '/api/v1/presence_start_end/definitely_not_existing_error_404'
+        )
+        resp = self.client.get('/api/v1/presence_start_end/10')
+        data = json.loads(resp.data)
+        self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
+        self.assertListEqual(data, proper_data)
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> b9b9686... WD-56-Adding-new-timeline
+=======
+>>>>>>> 3a4b58c... Wd 56 adding new timeline - fixed (#5)
+=======
+    def test_render_view(self):
+        "Test template rendering based on html"
+        resp_404 = self.client.get('/definitely_not_existing_404')
+        resp = self.client.get('/presence_weekday')
+
+        self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
+
+>>>>>>> 89d1aec... Changed static html to jinja2
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """
@@ -83,6 +185,79 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
         self.assertEqual(data[10][sample_date]['start'],
                          datetime.time(9, 39, 5))
+
+<<<<<<< HEAD
+=======
+    def test_interval(self):
+        """Test calculation of interval in seconds between
+        two datetime.time objects.
+        """
+        self.assertEqual(
+            0, utils.interval(datetime.time(0, 0, 0), datetime.time(0, 0, 0)),
+        )
+        self.assertEqual(
+            1, utils.interval(datetime.time(0, 0, 1), datetime.time(0, 0, 2)),
+        )
+
+    def test_mean(self):
+        """Test calculation of arithmetic mean"""
+        self.assertEqual(
+            0, utils.mean([])
+        )
+        self.assertEqual(
+            2, utils.mean([1, 2, 3])
+        )
+        self.assertEqual(
+            0, utils.mean([0, 0, 0])
+        )
+        self.assertEqual(
+            1.25, utils.mean([0, 1, 2, 2])
+        )
+        self.assertAlmostEqual(
+            0.1, utils.mean([0, 0.1, 0.2])
+        )
+>>>>>>> 81ab1ee... Changes after 2nd review
+
+    def test_group_by_start_end_time(self):
+        """Test groups start and end time entries by weekday."""
+        proper_data = [
+<<<<<<< HEAD
+=======
+            [0, 0],
+>>>>>>> 12e363d... Changing static HTML to Jinja2
+            [0, 0],
+            [34745, 64792],
+            [33592, 58057],
+            [38926, 62631],
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ]
+
+        data = utils.get_data()
+
+        self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
+<<<<<<< HEAD
+
+
+    def test_group_by_start_end_time(self):
+        """Test groups start and end time entries by weekday."""
+        proper_data = [
+            [0, 0],
+            [34745, 64792],
+            [33592, 58057],
+            [38926, 62631],
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ]
+
+        data = utils.get_data()
+
+        self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
+=======
+>>>>>>> 855dbf8... Changes after review
+
 
 
 def suite():

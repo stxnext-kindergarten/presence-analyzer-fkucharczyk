@@ -13,6 +13,8 @@ from flask import Response
 from presence_analyzer.main import app
 
 import logging
+<<<<<<< HEAD
+<<<<<<< HEAD
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
 
@@ -24,6 +26,29 @@ def jsonify(function):
     def inner(*args, **kwargs):
         return Response(dumps(function(*args, **kwargs)),
                         mimetype='application/json')
+=======
+
+=======
+>>>>>>> f9cb9ab... Deleting extra blank line in utils.py
+log = logging.getLogger(__name__)  # pylint: disable=invalid-name
+
+
+def jsonify(function):
+    """Creates a response with the JSON representation
+    of wrapped function result.
+    """
+    @wraps(function)
+    def inner(*args, **kwargs):
+        """This docstring will be overridden by @wraps decorator."""
+        return Response(
+            dumps(function(*args, **kwargs)),
+            mimetype='application/json'
+        )
+<<<<<<< HEAD
+
+>>>>>>> b9b9686... WD-56-Adding-new-timeline
+=======
+>>>>>>> 9c833e3... Fixing misspellings
     return inner
 
 
@@ -62,7 +87,6 @@ def get_data():
                 log.debug('Problem with line %d: ', i, exc_info=True)
 
             data.setdefault(user_id, {})[date] = {'start': start, 'end': end}
-
     return data
 
 
@@ -97,3 +121,19 @@ def mean(items):
     Calculates arithmetic mean. Returns zero for empty lists.
     """
     return float(sum(items)) / len(items) if len(items) > 0 else 0
+
+
+def group_by_start_end_time(items):
+    """Groups start, end time by weekday."""
+    result = [[], [], [], [], [], [], []]  # one list for every day in week
+    time = [{'start': [], 'end': []} for i in range(7)]
+    for date in items:
+        time[date.weekday()]['start'].append(
+            seconds_since_midnight(items[date]['start'])
+        )
+        time[date.weekday()]['end'].append(
+            seconds_since_midnight(items[date]['end'])
+        )
+    for weekday, values in enumerate(time):
+        result[weekday] = [mean(values['start']), mean(values['end'])]
+    return result
