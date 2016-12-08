@@ -106,7 +106,8 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         )
         resp = self.client.get('/api/v1/presence_start_end/10')
         data = json.loads(resp.data)
-
+        self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
         self.assertListEqual(data, proper_data)
 
 
@@ -164,10 +165,10 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         two datetime.time objects.
         """
         self.assertEqual(
-            0, utils.interval(datetime.time(0, 0, 0),datetime.time(0, 0, 0)),
+            0, utils.interval(datetime.time(0, 0, 0), datetime.time(0, 0, 0)),
         )
         self.assertEqual(
-            1, utils.interval(datetime.time(0, 0, 1),datetime.time(0, 0, 2)),
+            1, utils.interval(datetime.time(0, 0, 1), datetime.time(0, 0, 2)),
         )
 
     def test_mean(self):
@@ -203,6 +204,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         data = utils.get_data()
 
         self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
+
 
 def suite():
     """Default test suite."""
