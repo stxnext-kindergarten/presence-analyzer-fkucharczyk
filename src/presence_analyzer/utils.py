@@ -15,7 +15,9 @@ log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def jsonify(function):
-    """Creates a response with the JSON representation of wrapped function result."""
+    """Creates a response with the JSON representation
+    of wrapped function result.
+    """
     @wraps(function)
     def inner(*args, **kwargs):
         """This docstring will be overridden by @wraps decorator."""
@@ -59,7 +61,6 @@ def get_data():
                 log.debug('Problem with line %d: ', i, exc_info=True)
 
             data.setdefault(user_id, {})[date] = {'start': start, 'end': end}
-
     return data
 
 
@@ -86,3 +87,19 @@ def interval(start, end):
 def mean(items):
     """Calculates arithmetic mean. Returns zero for empty lists."""
     return float(sum(items)) / len(items) if len(items) > 0 else 0
+
+
+def group_by_start_end_time(items):
+    """Groups start, end time by weekday."""
+    result = [[], [], [], [], [], [], []]  # one list for every day in week
+    time = [{'start': [], 'end': []} for i in range(7)]
+    for date in items:
+        time[date.weekday()]['start'].append(
+            seconds_since_midnight(items[date]['start'])
+        )
+        time[date.weekday()]['end'].append(
+            seconds_since_midnight(items[date]['end'])
+        )
+    for weekday, values in enumerate(time):
+        result[weekday] = [mean(values['start']), mean(values['end'])]
+    return result
