@@ -77,10 +77,9 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"], 'language': 'en'});
-    </script>
-    <script type="text/javascript">
+
         (function($) {
-            $(document).ready(function(){
+            $(document).ready(function() {
                 var loading = $('#loading');
                 $.getJSON("/api/v1/users", function(result) {
                     var dropdown = $("#user_id");
@@ -90,7 +89,7 @@
                     dropdown.show();
                     loading.hide();
                 });
-                $('#user_id').change(function(){
+                $('#user_id').change(function() {
                     var selected_user = $("#user_id").val();
                     var chart_div = $('#chart_div');
                     if(selected_user) {
