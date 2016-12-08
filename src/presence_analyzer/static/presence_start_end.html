@@ -75,13 +75,12 @@
 
     <script src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-        google.load("visualization", "1", {packages:["corechart", "timeline"], 'language': 'pl'});
-    </script>
     <script src="/static/js/parseinterval.js"></script>
     <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart", "timeline"], 'language': 'pl'});
+
         (function($) {
-            $(document).ready(function(){
+            $(document).ready(function() {
                 var loading = $('#loading');
                 $.getJSON("/api/v1/users", function(result) {
                     var dropdown = $("#user_id");
@@ -91,14 +90,14 @@
                     dropdown.show();
                     loading.hide();
                 });
-                $('#user_id').change(function(){
+                $('#user_id').change(function() {
                     var selected_user = $("#user_id").val();
                     var chart_div = $('#chart_div');
                     if(selected_user) {
                         loading.show();
                         chart_div.hide();
-                        $.getJSON("/api/v1/presence_start_end/"+selected_user, function(result){
-                            $.each(result, function(index, value){
+                        $.getJSON("/api/v1/presence_start_end/"+selected_user, function(result) {
+                            $.each(result, function(index, value) {
                                 value[1] = parseInterval(value[1]);
                                 value[2] = parseInterval(value[2]);
                             })

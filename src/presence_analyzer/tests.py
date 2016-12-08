@@ -56,7 +56,9 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
 
         resp = self.client.get('/api/v1/mean_time_weekday/10')
         data = json.loads(resp.data)
-        resp_user_not_found = self.client.get('/api/v1/mean_time_weekday/0')
+        resp_user_not_found = self.client.get(
+            '/api/v1/mean_time_weekday/definitely_not_existing_error_404'
+        )
 
         self.assertEqual(resp_user_not_found.status_code, httplib.NOT_FOUND)
         self.assertEqual(resp.status_code, httplib.OK)
@@ -76,7 +78,9 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             ['Sun', 0],
         ]
 
-        resp_404 = self.client.get('/api/v1/presence_weekday/0')
+        resp_404 = self.client.get(
+            '/api/v1/presence_weekday/definitely_not_existing_error_404'
+        )
         resp = self.client.get('/api/v1/presence_weekday/10')
         data = json.loads(resp.data)
 
@@ -97,7 +101,9 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             ['Sun', 0, 0]
         ]
 
-        resp_404 = self.client.get('/api/v1/presence_start_end/0')
+        resp_404 = self.client.get(
+            '/api/v1/presence_start_end/definitely_not_existing_error_404'
+        )
         resp = self.client.get('/api/v1/presence_start_end/10')
         data = json.loads(resp.data)
 
@@ -170,7 +176,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             0, utils.mean([])
         )
         self.assertEqual(
-            2, utils.mean([1,2,3])
+            2, utils.mean([1, 2, 3])
         )
         self.assertEqual(
             0, utils.mean([0, 0, 0])
@@ -185,7 +191,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     def test_group_by_start_end_time(self):
         """Test groups start and end time entries by weekday."""
         proper_data = [
-            [0,0],
+            [0, 0],
             [34745, 64792],
             [33592, 58057],
             [38926, 62631],
