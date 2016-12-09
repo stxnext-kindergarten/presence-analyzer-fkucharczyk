@@ -1,0 +1,57 @@
+{% set pages = [
+    ("mean_time_weekday.html", "Presence by weekday"),
+    ("presence_start_end.html", "Presence start-end"),
+    ("presence_weekday.html", "Presence by weekday")
+] %}
+
+<!doctype html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <title>Presence analyzer</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content=""/>
+    <meta name="author" content="STX Next sp. z o.o."/>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="{{ url_for('static', filename='js/presence_weekday.js') }}"></script>
+    {% block javascript %}{% endblock %}
+</head>
+<body>
+    <div id="main">
+        <div id="header">
+            <h1>Presence analyzer</h1>
+            {% for url, title in pages %}
+                <ul>
+                    <li
+                        {% if request.path == "/"+ url %}
+                            id = "selected"
+                        {% endif %}
+                    >
+                        <a href="{{ url_for('render_view', template_name = url) }}">{{title}}</a>
+                    </li>
+                </ul>
+            {% endfor %}
+        </div>
+        <div id="content">
+            <h2>{% block title %}{% endblock %}</h2>
+            <p>
+                <select id="user_id" style="display: none">
+                    <option value="">--</option>
+                </select>
+                <div id="chart_div" style="display: none">
+                </div>
+                <div id="loading">
+                    <img src="/static/img/loading.gif" />
+                </div>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

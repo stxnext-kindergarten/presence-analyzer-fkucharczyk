@@ -11,13 +11,13 @@ from flask import Response
 from presence_analyzer.main import app
 
 import logging
-
 log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def jsonify(function):
-    """Creates a response with the JSON representation of wrapped function result."""
-
+    """Creates a response with the JSON representation
+    of wrapped function result.
+    """
     @wraps(function)
     def inner(*args, **kwargs):
         """This docstring will be overridden by @wraps decorator."""
@@ -25,7 +25,6 @@ def jsonify(function):
             dumps(function(*args, **kwargs)),
             mimetype='application/json'
         )
-
     return inner
 
 
@@ -62,7 +61,6 @@ def get_data():
                 log.debug('Problem with line %d: ', i, exc_info=True)
 
             data.setdefault(user_id, {})[date] = {'start': start, 'end': end}
-
     return data
 
 
@@ -97,10 +95,11 @@ def group_by_start_end_time(items):
     time = [{'start': [], 'end': []} for i in range(7)]
     for date in items:
         time[date.weekday()]['start'].append(
-            seconds_since_midnight(items[date]['start']))
+            seconds_since_midnight(items[date]['start'])
+        )
         time[date.weekday()]['end'].append(
-            seconds_since_midnight(items[date]['end']))
+            seconds_since_midnight(items[date]['end'])
+        )
     for weekday, values in enumerate(time):
         result[weekday] = [mean(values['start']), mean(values['end'])]
-
     return result
