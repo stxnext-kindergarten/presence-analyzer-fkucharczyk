@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Presence analyzer unit tests."""
+
 import os.path
 import json
 import datetime
@@ -29,7 +30,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
     def test_mainpage(self):
         """Test main page redirect."""
         resp = self.client.get('/')
-        self.assertEqual(resp.status_code, httplib.FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
         assert resp.headers['Location'].endswith('/presence_weekday.html')
 
     def test_api_users(self):
@@ -109,6 +110,14 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
         self.assertEqual(resp.status_code, httplib.OK)
         self.assertListEqual(data, proper_data)
+
+    def test_render_view(self):
+        """"Test template rendering based on html"""
+        resp_404 = self.client.get('/definitely_not_existing_404')
+        resp = self.client.get('/presence_weekday')
+
+        self.assertEqual(resp_404.status_code, httplib.NOT_FOUND)
+        self.assertEqual(resp.status_code, httplib.OK)
 
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
