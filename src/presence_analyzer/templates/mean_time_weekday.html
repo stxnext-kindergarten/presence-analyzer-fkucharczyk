@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/mean_time_weekday.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parse_interval.min.js') }}"></script>
+{% endblock %}
+{% block title %}Presence mean time by weekday{% endblock %}
