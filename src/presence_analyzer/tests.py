@@ -112,7 +112,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertListEqual(data, proper_data)
 
     def test_render_view(self):
-        "Test template rendering based on html"
+        """Test template rendering based on html"""
         resp_404 = self.client.get('/definitely_not_existing_404')
         resp = self.client.get('/presence_weekday')
 
@@ -198,10 +198,39 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             0.1, utils.mean([0, 0.1, 0.2])
         )
 
+    def test_interval(self):
+        """Test calculation of interval in seconds between
+        two datetime.time objects.
+        """
+        self.assertEqual(
+            0, utils.interval(datetime.time(0, 0, 0), datetime.time(0, 0, 0)),
+        )
+        self.assertEqual(
+            1, utils.interval(datetime.time(0, 0, 1), datetime.time(0, 0, 2)),
+        )
+
+    def test_mean(self):
+        """Test calculation of arithmetic mean"""
+        self.assertEqual(
+            0, utils.mean([])
+        )
+        self.assertEqual(
+            2, utils.mean([1, 2, 3])
+        )
+        self.assertEqual(
+            0, utils.mean([0, 0, 0])
+        )
+        self.assertEqual(
+            1.25, utils.mean([0, 1, 2, 2])
+        )
+        self.assertAlmostEqual(
+            0.1, utils.mean([0, 0.1, 0.2])
+        )
+
+
     def test_group_by_start_end_time(self):
         """Test groups start and end time entries by weekday."""
         proper_data = [
-            [0,0],
             [0, 0],
             [34745, 64792],
             [33592, 58057],
@@ -214,6 +243,23 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         data = utils.get_data()
 
         self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
+
+    def test_group_by_start_end_time(self):
+        """Test groups start and end time entries by weekday."""
+        proper_data = [
+            [0, 0],
+            [34745, 64792],
+            [33592, 58057],
+            [38926, 62631],
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ]
+
+        data = utils.get_data()
+
+        self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
+
 
 def suite():
     """Default test suite."""

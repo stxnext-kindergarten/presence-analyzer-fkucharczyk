@@ -45,11 +45,11 @@ def mean_time_weekday_view(user_id):
         abort(404)
 
     weekdays = group_by_weekday(data[user_id])
-    result = [
+    return [
         (calendar.day_abbr[weekday], mean(intervals))
         for weekday, intervals in enumerate(weekdays)
     ]
-    return result
+
 
 
 @app.route('/api/v1/presence_weekday/<int:user_id>', methods=['GET'])

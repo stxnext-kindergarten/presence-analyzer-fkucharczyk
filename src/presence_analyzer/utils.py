@@ -20,10 +20,9 @@ def jsonify(function):
     """
     @wraps(function)
     def inner(*args, **kwargs):
-        """This docstring will be overridden by @wraps decorator."""
         return Response(
             dumps(function(*args, **kwargs)),
-            mimetype='application/json'
+                        mimetype='application/json'
         )
     return inner
 
