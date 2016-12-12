@@ -90,9 +90,9 @@ def presence_start_end_time(user_id):
 @app.route('/<string:template_name>')
 def render_view(template_name):
     """Render template based on html file"""
-    if template_name.endswith(".html"):
-        template_name = template_name[:-5].strip()
+    if not template_name.endswith(".html"):
+        template_name += ".html"
     try:
-        return render_template('%s.html' % template_name)
+        return render_template(template_name)
     except TemplateNotFound:
             abort(404)

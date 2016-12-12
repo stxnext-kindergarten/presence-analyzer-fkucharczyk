@@ -214,7 +214,6 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         data = utils.get_data()
 
         self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
-        self.assertEqual(proper_data, utils.group_by_start_end_time(data[10]))
 
 def suite():
     """Default test suite."""
