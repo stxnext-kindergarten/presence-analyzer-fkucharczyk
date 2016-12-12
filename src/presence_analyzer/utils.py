@@ -22,7 +22,7 @@ def jsonify(function):
     def inner(*args, **kwargs):
         return Response(
             dumps(function(*args, **kwargs)),
-                        mimetype='application/json'
+            mimetype='application/json'
         )
     return inner
 
