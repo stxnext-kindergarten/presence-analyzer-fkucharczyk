@@ -2,7 +2,8 @@
 """Defines views."""
 
 import calendar
-from flask import redirect, abort
+from flask import redirect, abort, render_template
+from jinja2 import TemplateNotFound
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import (
@@ -20,7 +21,7 @@ log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 @app.route('/')
 def mainpage():
     """Redirects to front page."""
-    return redirect('/static/presence_weekday.html')
+    return redirect('/presence_weekday.html')
 
 
 @app.route('/api/v1/users', methods=['GET'])
@@ -44,11 +45,11 @@ def mean_time_weekday_view(user_id):
         abort(404)
 
     weekdays = group_by_weekday(data[user_id])
-    result = [
+    return [
         (calendar.day_abbr[weekday], mean(intervals))
         for weekday, intervals in enumerate(weekdays)
     ]
-    return result
+
 
 
 @app.route('/api/v1/presence_weekday/<int:user_id>', methods=['GET'])
@@ -84,3 +85,14 @@ def presence_start_end_time(user_id):
         (calendar.day_abbr[weekday], start, end)
         for weekday, (start, end) in enumerate(weekdays)
     ]
+
+
+@app.route('/<string:template_name>')
+def render_view(template_name):
+    """Render template based on html file"""
+    if not template_name.endswith(".html"):
+        template_name += ".html"
+    try:
+        return render_template(template_name)
+    except TemplateNotFound:
+            abort(404)
