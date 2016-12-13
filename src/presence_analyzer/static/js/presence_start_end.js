@@ -12,8 +12,8 @@ google.load("visualization", "1", {packages:["corechart", "timeline"], 'language
             loading.hide();
         });
         $('#user_id').change(function() {
-            var selected_user = $("#user_id").val();
-            var chart_div = $('#chart_div');
+            var selected_user = $("#user_id").val(),
+                chart_div = $('#chart_div');
             if(selected_user) {
                 loading.show();
                 chart_div.hide();
@@ -29,8 +29,8 @@ google.load("visualization", "1", {packages:["corechart", "timeline"], 'language
                     data.addRows(result);
                     var options = {
                         hAxis: {title: 'Weekday'}
-                    };
-                    var formatter = new google.visualization.DateFormat({pattern: 'HH:mm:ss'});
+                    },
+                        formatter = new google.visualization.DateFormat({pattern: 'HH:mm:ss'});
                     formatter.format(data, 1);
                     formatter.format(data, 2);
                     chart_div.show();

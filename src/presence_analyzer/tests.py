@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Presence analyzer unit tests."""
-
 import os.path
 import json
 import datetime
@@ -112,7 +111,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertListEqual(data, proper_data)
 
     def test_render_view(self):
-        """"Test template rendering based on html"""
+        """Test template rendering based on html."""
         resp_404 = self.client.get('/definitely_not_existing_404')
         resp = self.client.get('/presence_weekday')
 
@@ -181,7 +180,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         )
 
     def test_mean(self):
-        """Test calculation of arithmetic mean"""
+        """Test calculation of arithmetic mean."""
         self.assertEqual(
             0, utils.mean([])
         )

@@ -48,8 +48,8 @@ def mean_time_weekday_view(user_id):
     weekdays = group_by_weekday(data[user_id])
     return [
         (calendar.day_abbr[weekday], mean(intervals))
-              for weekday, intervals in weekdays.items()
-        ]
+        for weekday, intervals in enumerate(weekdays)
+    ]
 
 
 @app.route('/api/v1/presence_weekday/<int:user_id>', methods=['GET'])
@@ -89,9 +89,9 @@ def presence_start_end_time(user_id):
 
 @app.route('/<string:template_name>')
 def render_view(template_name):
-    """Render template based on html file"""
-    if not template_name.endswith(".html"):
-        template_name += ".html"
+    """Render template based on html file."""
+    if not template_name.endswith('.html'):
+        '{}.html'.format(template_name)
     try:
         return render_template(template_name)
     except TemplateNotFound:
